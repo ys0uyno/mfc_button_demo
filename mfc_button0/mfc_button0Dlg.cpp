@@ -63,6 +63,8 @@ BEGIN_MESSAGE_MAP(Cmfc_button0Dlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_WM_CTLCOLOR()
+	ON_WM_NCHITTEST()
 END_MESSAGE_MAP()
 
 
@@ -98,6 +100,21 @@ BOOL Cmfc_button0Dlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// TODO: Add extra initialization here
+	CString str_png_path(L".\\res\\background.png");
+	CImage image;
+	image.Load(str_png_path);
+
+	MoveWindow(0, 0, image.GetWidth(), image.GetHeight());
+
+	CBitmap bitmap;
+	bitmap.Attach(image.Detach());
+	m_brush.CreatePatternBrush(&bitmap);
+
+	CRgn rgn;
+	RECT rc;
+	GetClientRect(&rc);
+	rgn.CreateRoundRectRgn(rc.left + 3, rc.top + 3, rc.right - rc.left - 3, rc.bottom-rc.top -3, 6, 6);
+	SetWindowRgn(rgn, TRUE);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -151,3 +168,26 @@ HCURSOR Cmfc_button0Dlg::OnQueryDragIcon()
 	return static_cast<HCURSOR>(m_hIcon);
 }
 
+
+
+HBRUSH Cmfc_button0Dlg::OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor)
+{
+	HBRUSH hbr = CDialogEx::OnCtlColor(pDC, pWnd, nCtlColor);
+
+	// TODO:  Change any attributes of the DC here
+	if (this == pWnd)
+	{
+		return m_brush;
+	}
+
+	// TODO:  Return a different brush if the default is not desired
+	return hbr;
+}
+
+
+LRESULT Cmfc_button0Dlg::OnNcHitTest(CPoint point)
+{
+	// TODO: Add your message handler code here and/or call default
+	LRESULT ret = CDialogEx::OnNcHitTest(point);
+	return (ret == HTCLIENT) ? HTCAPTION : ret;
+}
