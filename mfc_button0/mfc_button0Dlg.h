@@ -3,7 +3,8 @@
 //
 
 #pragma once
-
+#include "afxwin.h"
+#include "PngButton.h"
 
 // Cmfc_button0Dlg dialog
 class Cmfc_button0Dlg : public CDialogEx
@@ -35,4 +36,6 @@ public:
 public:
 	CBrush m_brush;
 	afx_msg LRESULT OnNcHitTest(CPoint point);
+	CPngButton m_button_minimize;
+	CPngButton m_button_close;
 };

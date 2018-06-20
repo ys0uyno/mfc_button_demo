@@ -57,6 +57,8 @@ Cmfc_button0Dlg::Cmfc_button0Dlg(CWnd* pParent /*=NULL*/)
 void Cmfc_button0Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_BUTTON_MINIMIZE, m_button_minimize);
+	DDX_Control(pDX, IDC_BUTTON_CLOSE, m_button_close);
 }
 
 BEGIN_MESSAGE_MAP(Cmfc_button0Dlg, CDialogEx)
@@ -115,6 +117,11 @@ BOOL Cmfc_button0Dlg::OnInitDialog()
 	GetClientRect(&rc);
 	rgn.CreateRoundRectRgn(rc.left + 3, rc.top + 3, rc.right - rc.left - 3, rc.bottom-rc.top -3, 6, 6);
 	SetWindowRgn(rgn, TRUE);
+
+	m_button_minimize.set_image_path(L".\\res\\minimize.png", L".\\res\\background.png");
+	m_button_minimize.init_button(516, 8, 27, 21, true);
+	m_button_close.set_image_path(L".\\res\\close.png", L".\\res\\background.png");
+	m_button_close.init_button(545, 8, 27, 21, true);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
