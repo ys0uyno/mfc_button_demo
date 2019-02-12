@@ -3,7 +3,8 @@
 //
 
 #pragma once
-
+#include "afxwin.h"
+#include "ColorButton.h"
 
 // Cmfc_button1Dlg dialog
 class Cmfc_button1Dlg : public CDialogEx
@@ -29,4 +30,7 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+
+public:
+	ColorButton m_button1;
 };

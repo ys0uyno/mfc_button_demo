@@ -57,6 +57,7 @@ Cmfc_button1Dlg::Cmfc_button1Dlg(CWnd* pParent /*=NULL*/)
 void Cmfc_button1Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+	DDX_Control(pDX, IDC_BUTTON1, m_button1);
 }
 
 BEGIN_MESSAGE_MAP(Cmfc_button1Dlg, CDialogEx)
