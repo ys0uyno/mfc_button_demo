@@ -33,6 +33,66 @@ END_MESSAGE_MAP()
 
 
 
+void FillPathRoundRect(Gdiplus::Graphics *pGraphics, Gdiplus::Rect r, Gdiplus::Color color, int radius)
+{
+	int dia = 2 * radius;
+
+	Gdiplus::Rect Corner(r.X, r.Y, dia, dia);
+
+	Gdiplus::GraphicsPath path;
+
+	// top left
+	path.AddArc(Corner, 180, 90);
+
+	// top right
+	Corner.X += (int)(r.Width - dia - 1);
+	path.AddArc(Corner, 270, 90);
+
+	// bottom right
+	Corner.Y += (int)(r.Height - dia - 1);
+	path.AddArc(Corner, 0, 90);
+
+	// bottom left
+	Corner.X -= (int)(r.Width - dia - 1);
+	path.AddArc(Corner, 90, 90);
+
+	path.CloseFigure();
+
+	Gdiplus::SolidBrush br(color);
+	pGraphics->FillPath(&br, &path);
+}
+
+
+void DrawPathRoundRect(Gdiplus::Graphics *pGraphics, Gdiplus::Rect r, Gdiplus::Color color, int radius, int width)
+{
+	int dia = 2 * radius;
+
+	Gdiplus::Rect Corner(r.X, r.Y, dia, dia);
+
+	Gdiplus::GraphicsPath path;
+
+	// top left
+	path.AddArc(Corner, 180, 90);
+
+	// top right
+	Corner.X += (int)(r.Width - dia - 1);
+	path.AddArc(Corner, 270, 90);
+
+	// bottom right
+	Corner.Y += (int)(r.Height - dia - 1);
+	path.AddArc(Corner, 0, 90);
+
+	// bottom left
+	Corner.X -= (int)(r.Width - dia - 1);
+	path.AddArc(Corner, 90, 90);
+
+	path.CloseFigure();
+
+	Gdiplus::Pen pen(color, (Gdiplus::REAL)width);
+	pen.SetAlignment(Gdiplus::PenAlignmentInset);
+	pGraphics->DrawPath(&pen, &path);
+}
+
 
 void ColorButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 {
@@ -49,26 +109,67 @@ void ColorButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	CDC *pdc = CDC::FromHandle(lpDrawItemStruct->hDC);
 	CRect rect;
 
+	Gdiplus::Graphics gdi_graphics(lpDrawItemStruct->hDC);
+	Gdiplus::Rect gdi_rect(0, 0,
+		lpDrawItemStruct->rcItem.right - lpDrawItemStruct->rcItem.left,
+		lpDrawItemStruct->rcItem.bottom - lpDrawItemStruct->rcItem.top
+		);
+
+	gdi_graphics.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+
 	rect.CopyRect(&lpDrawItemStruct->rcItem);
-	DrawFocusRect(lpDrawItemStruct->hDC, &rect);
+	// DrawFocusRect(lpDrawItemStruct->hDC, &rect);
 
 	CBrush brush;
 	if (lpDrawItemStruct->itemState &ODS_SELECTED)
 	{
-		brush.CreateSolidBrush(RGB(100, 100, 100));
+		// brush.CreateSolidBrush(RGB(100, 100, 100));
+		DrawPathRoundRect(&gdi_graphics,
+			gdi_rect,
+			Gdiplus::Color(255, 100, 100, 100),
+			rect.Height() / 2,
+			1
+			);
+		FillPathRoundRect(&gdi_graphics,
+			gdi_rect,
+			Gdiplus::Color(255, 100, 100, 100),
+			rect.Height() / 2
+			);
 	}
 	else if (m_bhover)
 	{
-		brush.CreateSolidBrush(RGB(150, 150, 150));
+		// brush.CreateSolidBrush(RGB(150, 150, 150));
+		DrawPathRoundRect(&gdi_graphics,
+			gdi_rect,
+			Gdiplus::Color(255, 150, 150, 150),
+			rect.Height() / 2,
+			1
+			);
+		FillPathRoundRect(&gdi_graphics,
+			gdi_rect,
+			Gdiplus::Color(255, 150, 150, 150),
+			rect.Height() / 2
+			);
 	}
 	else
 	{
-		brush.CreateSolidBrush(RGB(200, 200, 200));
+		// brush.CreateSolidBrush(RGB(200, 200, 200));
+		DrawPathRoundRect(&gdi_graphics,
+			gdi_rect,
+			Gdiplus::Color(255, 200, 200, 200),
+			rect.Height() / 2,
+			1
+			);
+		FillPathRoundRect(&gdi_graphics,
+			gdi_rect,
+			Gdiplus::Color(255, 200, 200, 200),
+			rect.Height() / 2
+			);
 	}
 
-	FillRect(lpDrawItemStruct->hDC, &rect, (HBRUSH)brush.m_hObject);
 	SetBkMode(lpDrawItemStruct->hDC, TRANSPARENT);
-	pdc->Draw3dRect(rect, RGB(0, 0, 0), RGB(0, 0, 0));
+	// FillRect(lpDrawItemStruct->hDC, &rect, (HBRUSH)brush.m_hObject);
+	// pdc->Draw3dRect(rect, RGB(0, 0, 0), RGB(0, 0, 0));
 
 	CString button_text;
 	GetWindowText(button_text);

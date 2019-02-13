@@ -51,6 +51,8 @@ BOOL Cmfc_button1App::InitInstance()
 
 	CWinApp::InitInstance();
 
+	Gdiplus::GdiplusStartupInput gsi;
+	Gdiplus::GdiplusStartup(&m_gdiplus_token, &gsi, NULL);
 
 	AfxEnableControlContainer();
 
@@ -92,3 +94,12 @@ BOOL Cmfc_button1App::InitInstance()
 	return FALSE;
 }
 
+
+
+int Cmfc_button1App::ExitInstance()
+{
+	// TODO: Add your specialized code here and/or call the base class
+	Gdiplus::GdiplusShutdown(m_gdiplus_token);
+
+	return CWinApp::ExitInstance();
+}
