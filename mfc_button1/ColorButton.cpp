@@ -51,27 +51,24 @@ void ColorButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 	rect.CopyRect(&lpDrawItemStruct->rcItem);
 	DrawFocusRect(lpDrawItemStruct->hDC, &rect);
-	pdc->Draw3dRect(rect,
-		GetSysColor(COLOR_BTNHIGHLIGHT),
-		GetSysColor(COLOR_BTNSHADOW)
-		);
 
 	CBrush brush;
 	if (lpDrawItemStruct->itemState &ODS_SELECTED)
 	{
-		brush.CreateSolidBrush(RGB(100, 0, 0));
+		brush.CreateSolidBrush(RGB(100, 100, 100));
 	}
 	else if (m_bhover)
 	{
-		brush.CreateSolidBrush(RGB(0, 100, 0));
+		brush.CreateSolidBrush(RGB(150, 150, 150));
 	}
 	else
 	{
-		brush.CreateSolidBrush(RGB(0, 0, 100));
+		brush.CreateSolidBrush(RGB(200, 200, 200));
 	}
 
 	FillRect(lpDrawItemStruct->hDC, &rect, (HBRUSH)brush.m_hObject);
 	SetBkMode(lpDrawItemStruct->hDC, TRANSPARENT);
+	pdc->Draw3dRect(rect, RGB(0, 0, 0), RGB(0, 0, 0));
 
 	CString button_text;
 	GetWindowText(button_text);
