@@ -45,6 +45,48 @@ void ColorButton::DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct)
 	{
 		OutputDebugString(L"no hover");
 	}
+
+	CDC *pdc = CDC::FromHandle(lpDrawItemStruct->hDC);
+	CRect rect;
+
+	rect.CopyRect(&lpDrawItemStruct->rcItem);
+	DrawFocusRect(lpDrawItemStruct->hDC, &rect);
+	pdc->Draw3dRect(rect,
+		GetSysColor(COLOR_BTNHIGHLIGHT),
+		GetSysColor(COLOR_BTNSHADOW)
+		);
+
+	CBrush brush;
+	if (lpDrawItemStruct->itemState &ODS_SELECTED)
+	{
+		brush.CreateSolidBrush(RGB(100, 0, 0));
+	}
+	else if (m_bhover)
+	{
+		brush.CreateSolidBrush(RGB(0, 100, 0));
+	}
+	else
+	{
+		brush.CreateSolidBrush(RGB(0, 0, 100));
+	}
+
+	FillRect(lpDrawItemStruct->hDC, &rect, (HBRUSH)brush.m_hObject);
+	SetBkMode(lpDrawItemStruct->hDC, TRANSPARENT);
+
+	CString button_text;
+	GetWindowText(button_text);
+
+	COLORREF orig_text_color =
+		SetTextColor(lpDrawItemStruct->hDC,RGB(255, 0, 0));
+
+	DrawText(lpDrawItemStruct->hDC,
+		button_text,
+		button_text.GetLength(),
+		&lpDrawItemStruct->rcItem,
+		DT_SINGLELINE | DT_VCENTER | DT_CENTER
+		);
+
+	SetTextColor(lpDrawItemStruct->hDC, orig_text_color);
 }
 
 
